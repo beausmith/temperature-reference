@@ -7,20 +7,39 @@ const { clientHeight } = document.documentElement
 const toF = (c: number) => (c * 9 / 5 + 32)
 // const toC = (f: number) => ((f - 32) * 5 / 9)
 
+const scale = 5
 const rowHeight = 50
 const celciusMin = -40
 const celciusMax = 300
+const celciusRange: number[] = []
+for (let i = celciusMin; i <= celciusMax; i += scale) {
+  celciusRange.unshift(i)
+}
+const zeroScrollTop = (celciusMax / scale) * rowHeight - (0 / scale * rowHeight) + rowHeight / 2
 const celciusTemp = (scale: number, temp: number) =>
   (celciusMax / scale) * rowHeight - (temp / scale * rowHeight) + rowHeight
 
-interface TempProps {
-  scale: number
+interface ButtonAttrs extends HTMLButtonElement {
+  readonly type: string
 }
-
-const AppContainer = styled.div`
+const Button = styled.button.attrs(( attrs: ButtonAttrs) => ({
+  type: attrs.type || 'button',
+}))`
   flex: 1;
+  padding: 1rem;
+`
+const AppContainer = styled.div`
+  position: relative;
+`
+const Navigation = styled.div`
+  position: fixed;
+  bottom: 0;
+  display: flex;
   width: 100%;
-  height: 100%;
+  background: rgba(255,255,255,.9);
+  box-shadow: 0 0 3px rgba(0,0,0,.1);
+`
+const RangeContainer = styled.div`
   padding: ${clientHeight / 2}px 0;
 `
 const Range = styled.div`
@@ -86,21 +105,21 @@ const itemStyles = css`
   }
 `
 
-const Chicken = styled.div<TempProps>`
+const Chicken = styled.div`
   ${itemStyles}
-  top: ${({ scale }) => (celciusTemp(scale, 65))}px;
+  top: ${celciusTemp(scale, 65)}px;
   left: 20vw;
   background: tan;
 `
-const HangerSteak = styled.div<TempProps>`
+const HangerSteak = styled.div`
   ${itemStyles}
-  top: ${({ scale }) => (celciusTemp(scale, 54.4))}px;
+  top: ${celciusTemp(scale, 54.4)}px;
   left: 25vw;
   background: cornflowerblue;
 `
-const Weather = styled.div<TempProps>`
+const Weather = styled.div`
   position: absolute;
-  top: ${({ scale }) => (celciusTemp(scale, 45))}px;
+  top: ${celciusTemp(scale, 45)}px;
   left: 25vw;
   background: linear-gradient(red, orange , yellow, #f8f8f8, cyan, blue, darkblue);
   height: ${rowHeight * 10.5}px;
@@ -109,31 +128,34 @@ const Weather = styled.div<TempProps>`
   border-radius: ${rowHeight / 2}px;
 `
 
+
 const App: React.FC = () => {
-  const scale = 5
-  const celciusRange: number[] = []
-  for (let i = celciusMin; i <= celciusMax; i += scale) {
-    celciusRange.unshift(i)
+  const scrollToZeroCelcius = () => {
+    window.scrollTo({ top: zeroScrollTop, behavior: 'smooth' })
   }
   useLayoutEffect(() => {
-    const { scrollHeight } = document.documentElement
-    document.documentElement.scrollTop = (scrollHeight / 2) - clientHeight / 2
+    window.scrollTo({ top: zeroScrollTop })
   }, [])
   return (
     <AppContainer>
-      <Range>
-        <Weather scale={scale} />
-        <Chicken scale={scale}>Chicken 65ºC</Chicken>
-        <HangerSteak scale={scale}>Hanger Steak 54.4ºC</HangerSteak>
-        {celciusRange.map(c => (
-          <Row key={c}>
-            <RowLabel>{c}ºC</RowLabel>
-            <RowRuler />
-            <RowLabel>{toF(c)}ºF</RowLabel>
-          </Row>
-        ))}
-      </Range>
-      <Indicator />
+      <RangeContainer>
+        <Range>
+          <Weather />
+          <Chicken>Chicken 65ºC</Chicken>
+          <HangerSteak>Hanger Steak 54.4ºC</HangerSteak>
+          {celciusRange.map(c => (
+            <Row key={c}>
+              <RowLabel>{c}ºC</RowLabel>
+              <RowRuler />
+              <RowLabel>{toF(c)}ºF</RowLabel>
+            </Row>
+          ))}
+        </Range>
+        <Indicator />
+      </RangeContainer>
+      <Navigation>
+        <Button onClick={scrollToZeroCelcius}>0ºC</Button>
+      </Navigation>
     </AppContainer>
   );
 }
