@@ -1,6 +1,8 @@
-import React, { useLayoutEffect } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 import smoothscroll from 'smoothscroll-polyfill'
+
+import useWindowScroll from './hooks/useWindowScroll'
 
 import './App.css'
 
@@ -29,7 +31,10 @@ const Button = styled.button.attrs(( attrs: ButtonAttrs) => ({
   type: attrs.type || 'button',
 }))`
   flex: 1;
+  border: none;
   padding: 1rem;
+  background: transparent;
+  outline: none;
 `
 const AppContainer = styled.div`
   position: relative;
@@ -58,28 +63,36 @@ const Row = styled.div`
   flex-direction: row;
   height: ${rowHeight}px;
   align-items: center;
+  & > div:first-child {
+    margin-left: 3vw;
+  }
+  & > div:last-child {
+    margin-right: 3vw;
+  }
+
 `
-const RowLabel = styled.div`
+const Label = styled.div`
   text-align: center;
   min-width: 4em;
   background: white;
   border: 1px solid #dddddd;
   border-radius: ${rowHeight / 2}px;
-  &:first-child {
-    margin-left: 3vw;
-  }
-  &:last-child {
-    margin-right: 3vw;
-  }
 `
 const RowRuler = styled.div`
   flex: 3;
 `
 const Indicator = styled.div`
+  display: flex;
+  flex-direction: row;
   position: fixed;
   top: 50%;
   width: 100%;
-  border-bottom: 1px solid red;
+  border-top: 1px solid rgba(255, 0, 0, 0.7);
+  & div {
+    padding: 0 1rem;
+    margin: -11px auto 0;
+    border-color: rgba(255, 0, 0, 0.7);
+  }
 `
 const itemStyles = css`
   position: absolute;
@@ -111,7 +124,7 @@ const itemStyles = css`
 const Chicken = styled.div`
   ${itemStyles}
   top: ${celciusTemp(scale, 65)}px;
-  left: 20vw;
+  left: 25vw;
   background: tan;
 `
 const HangerSteak = styled.div`
@@ -119,26 +132,40 @@ const HangerSteak = styled.div`
   top: ${celciusTemp(scale, 54.4)}px;
   left: 25vw;
   background: cornflowerblue;
+  &::before,
+  &::after {
+    border-color: cornflowerblue;
+  }
 `
 const Weather = styled.div`
   position: absolute;
   top: ${celciusTemp(scale, 45)}px;
   left: 25vw;
-  background: linear-gradient(red, orange , yellow, #f8f8f8, cyan, blue, darkblue);
+  background: linear-gradient(red, red, orange, orange, yellow, #f8f8f8, cyan, blue, darkblue);
   height: ${rowHeight * 10.5}px;
   width: ${rowHeight / 2}px;
   margin-top: -${rowHeight / 4}px;
   border-radius: ${rowHeight / 2}px;
 `
 
-
 const App: React.FC = () => {
+  const { y } = useWindowScroll()
+  const [isZeroInit, setIsZeroInit] = useState(false)
+  if (!!y && !isZeroInit) setIsZeroInit(true)
+  const currentTemp = ((zeroScrollTop - y) / 10).toFixed(1)
   const scrollToZeroCelcius = () => {
     window.scroll({ top: zeroScrollTop, behavior: 'smooth' })
   }
   useLayoutEffect(() => {
-    window.scroll({ top: zeroScrollTop })
+    const triggerScroll = () => {
+      window.scrollTo({ top: zeroScrollTop + 1 })
+      window.setTimeout(() => {
+        window.scrollTo({ top: zeroScrollTop })
+      }, 200)
+    }
+    triggerScroll()
   }, [])
+  //
   return (
     <AppContainer>
       <RangeContainer>
@@ -148,13 +175,17 @@ const App: React.FC = () => {
           <HangerSteak>Hanger Steak 54.4ºC</HangerSteak>
           {celciusRange.map(c => (
             <Row key={c}>
-              <RowLabel>{c}ºC</RowLabel>
+              <Label>{c}ºC</Label>
               <RowRuler />
-              <RowLabel>{toF(c)}ºF</RowLabel>
+              <Label>{toF(c)}ºF</Label>
             </Row>
           ))}
         </Range>
-        <Indicator />
+        <Indicator>
+          {isZeroInit && (
+            <Label>{currentTemp}ºC / {toF(parseFloat(currentTemp)).toFixed(1)}ºF</Label>
+          )}
+        </Indicator>
       </RangeContainer>
       <Navigation>
         <Button onClick={scrollToZeroCelcius}>0ºC</Button>
