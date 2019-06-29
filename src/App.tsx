@@ -132,7 +132,7 @@ const StyledItem = styled.div<ItemProps>`
   }
 `
 const Item = (props: ItemProps) => {
-  const { name, celcius, time, color } = props
+  const { name, celcius, time } = props
   return <StyledItem {...props}>{name} {time} @ {celcius}ºC</StyledItem>
 }
 
