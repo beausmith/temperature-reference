@@ -127,6 +127,18 @@ const Chicken = styled.div`
   left: 25vw;
   background: tan;
 `
+const Salmon = styled.div`
+  ${itemStyles}
+  top: ${celciusTemp(scale, 55)}px;
+  right: 25vw;
+  background: salmon;
+`
+const Egg = styled.div`
+  ${itemStyles}
+  top: ${celciusTemp(scale, 63)}px;
+  right: 25vw;
+  background: lightgrey;
+`
 const HangerSteak = styled.div`
   ${itemStyles}
   top: ${celciusTemp(scale, 54.4)}px;
@@ -141,7 +153,7 @@ const Weather = styled.div`
   position: absolute;
   top: ${celciusTemp(scale, 45)}px;
   left: 25vw;
-  background: linear-gradient(red, red, orange, orange, yellow, #f8f8f8, cyan, blue, darkblue);
+  background: linear-gradient(red, red, orange, orange, yellow, #f8f8f8, cyan, blue, blue, darkblue, darkblue);
   height: ${rowHeight * 10.5}px;
   width: ${rowHeight / 2}px;
   margin-top: -${rowHeight / 4}px;
@@ -171,8 +183,10 @@ const App: React.FC = () => {
       <RangeContainer>
         <Range>
           <Weather />
-          <Chicken>Chicken 65ºC</Chicken>
-          <HangerSteak>Hanger Steak 54.4ºC</HangerSteak>
+          <Chicken>Chicken Breast 1h @ 65ºC</Chicken>
+          <Egg>Egg 63m @ 63°C</Egg>
+          <HangerSteak>Hanger Steak 2–4h @ 54.4ºC</HangerSteak>
+          <Salmon>Salmon 1h @ 55°C</Salmon>
           {celciusRange.map(c => (
             <Row key={c}>
               <Label>{c}ºC</Label>
