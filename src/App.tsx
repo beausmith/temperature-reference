@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import smoothscroll from 'smoothscroll-polyfill'
 
 import useWindowScroll from './hooks/useWindowScroll'
@@ -56,7 +56,7 @@ const Range = styled.div`
   background:
     repeating-linear-gradient(#dddddd, #dddddd 1px, transparent 1px, transparent 50px),
     repeating-linear-gradient(#f3f3f3, #f3f3f3 1px, transparent 1px, transparent 10px);
-  padding: 25px 0 26px; /* for last horizontal line */
+  padding: 25px 0 26px; /* +1px to display last horizontal line */
 `
 const Row = styled.div`
   display: flex;
@@ -94,61 +94,48 @@ const Indicator = styled.div`
     border-color: rgba(255, 0, 0, 0.7);
   }
 `
-const itemStyles = css`
+interface ItemProps {
+  name: string
+  celcius: number
+  time: string
+  color: string
+  right?: string
+  left?: string
+}
+const StyledItem = styled.div<ItemProps>`
   position: absolute;
+  top: ${({ celcius }) => (celciusTemp(scale, celcius))}px;
+  left: ${({ left, right }) => (!left && !right ? '25vw' : left && !right ? left : undefined)};
+  right: ${({ left, right }) => (right && !left ? right : undefined)};
+  height: ${rowHeight / 2}px;
+  background: ${({ color }) => (color || undefined)};
   font-size: 0.8rem;
   line-height: ${rowHeight / 2}px;
   padding: 0 0.5rem;
-  height: ${rowHeight / 2}px;
   border-radius: ${rowHeight / 2}px;
   margin-top: -${rowHeight / 4}px;
   white-space: nowrap;
-  &::before {
+  &::before,
+  &::after {
     content: '';
-    border-top: 1px solid tan;
-    width: 2vw;
     position: absolute;
     top: ${rowHeight / 4}px;
+    width: 2vw;
+    border-top: 1px solid tan;
+    border-color: ${({ color }) => (color || undefined)};
+  }
+  &::before {
     left: -2vw;
   }
   &::after {
-    content: '';
-    border-top: 1px solid tan;
-    width: 2vw;
-    position: absolute;
-    top: ${rowHeight / 4}px;
     right: -2vw;
   }
 `
+const Item = (props: ItemProps) => {
+  const { name, celcius, time, color } = props
+  return <StyledItem {...props}>{name} {time} @ {celcius}ºC</StyledItem>
+}
 
-const Chicken = styled.div`
-  ${itemStyles}
-  top: ${celciusTemp(scale, 65)}px;
-  left: 25vw;
-  background: tan;
-`
-const Salmon = styled.div`
-  ${itemStyles}
-  top: ${celciusTemp(scale, 55)}px;
-  right: 25vw;
-  background: salmon;
-`
-const Egg = styled.div`
-  ${itemStyles}
-  top: ${celciusTemp(scale, 63)}px;
-  right: 25vw;
-  background: lightgrey;
-`
-const HangerSteak = styled.div`
-  ${itemStyles}
-  top: ${celciusTemp(scale, 54.4)}px;
-  left: 25vw;
-  background: cornflowerblue;
-  &::before,
-  &::after {
-    border-color: cornflowerblue;
-  }
-`
 const Weather = styled.div`
   position: absolute;
   top: ${celciusTemp(scale, 45)}px;
@@ -177,16 +164,15 @@ const App: React.FC = () => {
     }
     triggerScroll()
   }, [])
-  //
   return (
     <AppContainer>
       <RangeContainer>
         <Range>
           <Weather />
-          <Chicken>Chicken Breast 1h @ 65ºC</Chicken>
-          <Egg>Egg 63m @ 63°C</Egg>
-          <HangerSteak>Hanger Steak 2–4h @ 54.4ºC</HangerSteak>
-          <Salmon>Salmon 1h @ 55°C</Salmon>
+          <Item name="Chicken Breast" time="1h" celcius={65} color="tan" />
+          <Item name="Egg" time="63m" celcius={63} color="lightgrey" />
+          <Item name="Hanger Steak" time="2–4h" celcius={54.4} color="cornflowerblue" />
+          <Item name="Salmon" time="1h" celcius={55} color="salmon" right="25vw" />
           {celciusRange.map(c => (
             <Row key={c}>
               <Label>{c}ºC</Label>
