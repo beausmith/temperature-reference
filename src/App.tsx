@@ -1,7 +1,10 @@
 import React, { useLayoutEffect } from 'react'
 import styled, { css } from 'styled-components'
+import smoothscroll from 'smoothscroll-polyfill'
 
 import './App.css'
+
+smoothscroll.polyfill()
 
 const { clientHeight } = document.documentElement
 const toF = (c: number) => (c * 9 / 5 + 32)
@@ -131,10 +134,10 @@ const Weather = styled.div`
 
 const App: React.FC = () => {
   const scrollToZeroCelcius = () => {
-    window.scrollTo({ top: zeroScrollTop, behavior: 'smooth' })
+    window.scroll({ top: zeroScrollTop, behavior: 'smooth' })
   }
   useLayoutEffect(() => {
-    window.scrollTo({ top: zeroScrollTop })
+    window.scroll({ top: zeroScrollTop })
   }, [])
   return (
     <AppContainer>
