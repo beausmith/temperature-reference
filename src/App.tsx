@@ -169,6 +169,7 @@ const App: React.FC = () => {
       <RangeContainer>
         <Range>
           <Weather />
+          <Item name="Pizza" time="5m" celcius={300} color="lightblue" />
           <Item name="Chicken Breast" time="1h" celcius={65} color="tan" />
           <Item name="Egg" time="63m" celcius={63} color="lightgrey" />
           <Item name="Hanger Steak" time="2–4h" celcius={54.4} color="cornflowerblue" />
