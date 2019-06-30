@@ -188,7 +188,7 @@ const App: React.FC = () => {
         </Range>
         <Indicator>
           {isZeroInit && (
-            <Label>{currentTemp}ºC / {toF(parseFloat(currentTemp)).toFixed(1)}ºF</Label>
+            <Label>{currentTemp}ºC / {toF(parseFloat(currentTemp)).toFixed(1)}ºF?</Label>
           )}
         </Indicator>
       </RangeContainer>
