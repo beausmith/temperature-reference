@@ -46,6 +46,7 @@ const Navigation = styled.div`
   width: 100%;
   background: rgba(255,255,255,.9);
   box-shadow: 0 0 3px rgba(0,0,0,.1);
+  padding-bottom: env(safe-area-inset-bottom);
 `
 const RangeContainer = styled.div`
   padding: ${clientHeight / 2}px 0;
@@ -63,6 +64,8 @@ const Row = styled.div`
   flex-direction: row;
   height: ${rowHeight}px;
   align-items: center;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
   & > div:first-child {
     margin-left: 3vw;
   }
