@@ -130,10 +130,14 @@ const StyledItem = styled.div<ItemProps>`
   &::after {
     right: -2vw;
   }
+  &:focus {
+    z-index: 1;
+    outline: none;
+  }
 `
 const Item = (props: ItemProps) => {
   const { name, celcius, time } = props
-  return <StyledItem {...props}>{name} {time} @ {celcius}ºC</StyledItem>
+  return <StyledItem {...props} tabIndex={-1}>{name} {time} @ {celcius}ºC</StyledItem>
 }
 
 const Weather = styled.div`
