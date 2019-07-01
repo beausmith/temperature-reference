@@ -1,4 +1,5 @@
 import React, { useLayoutEffect, useState } from 'react'
+import safeAreaInsets from 'safe-area-insets'
 import styled from 'styled-components'
 import smoothscroll from 'smoothscroll-polyfill'
 
@@ -22,14 +23,13 @@ const celciusRange: number[] = []
 for (let i = celciusMin; i <= celciusMax; i += scale) {
   celciusRange.unshift(i)
 }
-const zeroScrollTop = (celciusMax / scale) * rowHeight - (0 / scale * rowHeight) + rowHeight / 2
+const zeroScrollTop = (celciusMax / scale) * rowHeight - (0 / scale * rowHeight) + rowHeight / 2 - safeAreaInsets.top / 2
 const celciusTemp = (scale: number, temp: number) =>
   (celciusMax / scale) * rowHeight - (temp / scale * rowHeight) + rowHeight
 
 const AppContainer = styled.div`
   position: relative;
 `
-
 
 const RangeContainer = styled.div`
   padding: ${clientHeight / 2}px 0;

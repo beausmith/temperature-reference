@@ -9,5 +9,4 @@ const Navigation = styled.div`
   box-shadow: 0 0 3px rgba(0,0,0,.1);
   padding-bottom: env(safe-area-inset-bottom);
 `
-
 export default Navigation
