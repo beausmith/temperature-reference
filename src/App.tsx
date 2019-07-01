@@ -31,6 +31,15 @@ const AppContainer = styled.div`
   position: relative;
 `
 
+const StatusBar = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: ${safeAreaInsets.top}px;
+  background: rgba(0,0,0,0.4);
+`
+
 const RangeContainer = styled.div`
   padding: ${clientHeight / 2}px 0;
 `
@@ -181,6 +190,7 @@ const App: React.FC = () => {
       <Navigation>
         <Button onClick={scrollToZeroCelcius}>0ºC</Button>
       </Navigation>
+      {safeAreaInsets.support && <StatusBar />}
     </AppContainer>
   );
 }
