@@ -8,10 +8,13 @@ const Button = styled.button.attrs((attrs: ButtonAttrs) => ({
 }))`
   appearance: none;
   flex: 1;
-  border: 0 solid red;
+  border: none;
   margin: 0;
   padding: 1rem;
   background: transparent;
+  &:focus {
+    outline: none;
+  }
 `
 
 export default Button
