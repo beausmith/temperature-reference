@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "REACT_APP_COMMIT_REF=\"$COMMIT_REF\" && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
