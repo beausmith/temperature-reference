@@ -5,6 +5,7 @@ import smoothscroll from 'smoothscroll-polyfill'
 
 import './App.css'
 
+import Debugger from './components/Debugger'
 import useWindowScroll from './hooks/useWindowScroll'
 import Button from './components/Button'
 import Navigation from './components/Navigation'
@@ -191,6 +192,7 @@ const App: React.FC = () => {
         <Button onClick={scrollToZeroCelcius}>0ºC</Button>
       </Navigation>
       {safeAreaInsets.support && <StatusBar />}
+      <Debugger />
     </AppContainer>
   );
 }
