@@ -24,7 +24,6 @@ const celciusRange: number[] = []
 for (let i = celciusMin; i <= celciusMax; i += scale) {
   celciusRange.unshift(i)
 }
-const zeroScrollTop = (celciusMax / scale) * rowHeight - (0 / scale * rowHeight) + rowHeight / 2 - safeAreaInsets.top / 2
 const celciusTemp = (scale: number, temp: number) =>
   (celciusMax / scale) * rowHeight - (temp / scale * rowHeight) + rowHeight
 
@@ -151,6 +150,7 @@ const App: React.FC = () => {
   const { y } = useWindowScroll()
   const [isZeroInit, setIsZeroInit] = useState(false)
   if (!!y && !isZeroInit) setIsZeroInit(true)
+  const zeroScrollTop = (celciusMax / scale) * rowHeight - (0 / scale * rowHeight) + rowHeight / 2 - safeAreaInsets.top / 2
   const currentTemp = ((zeroScrollTop - y) / 10).toFixed(1)
   const scrollToZeroCelcius = () => {
     window.scroll({ top: zeroScrollTop, behavior: 'smooth' })
@@ -163,7 +163,7 @@ const App: React.FC = () => {
       }, 200)
     }
     triggerScroll()
-  }, [])
+  }, [zeroScrollTop])
   return (
     <AppContainer>
       <RangeContainer>
@@ -191,7 +191,7 @@ const App: React.FC = () => {
       <Navigation>
         <Button onClick={scrollToZeroCelcius}>0ºC</Button>
       </Navigation>
-      {safeAreaInsets.support && <StatusBar />}
+      {safeAreaInsets.support && <StatusBar>${safeAreaInsets.top}px</StatusBar>}
       <Debugger />
     </AppContainer>
   );
