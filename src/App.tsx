@@ -183,7 +183,11 @@ const App: React.FC = () => {
       <Navigation>
         <Button onClick={scrollToZeroCelcius}>0ºC</Button>
       </Navigation>
-      {safeAreaInsets.support && <StatusBar />}
+      {safeAreaInsets.support && <StatusBar>
+        ${safeAreaInsets.top || 40}px
+        <br />
+        {safeAreaInsets.support.toString()}
+      </StatusBar>}
       <Debugger />
     </AppContainer>
   );
