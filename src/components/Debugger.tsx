@@ -6,12 +6,13 @@ const { clientHeight } = document.documentElement
 
 const Container = styled.div`
 position: fixed;
-top: 50px;
-right: 50px;
-left: 50px;
+top: 10px;
+right: 10px;
+left: 10px;
 padding: 4vw;
 background: rgba(10,200,30,0.75);
 z-index: 999;
+overflow: auto;
 `
 
 const Debugger: React.FC = ({ children }) => (
