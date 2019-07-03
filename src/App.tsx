@@ -9,6 +9,7 @@ import Debugger from './components/Debugger'
 import useWindowScroll from './hooks/useWindowScroll'
 import Button from './components/Button'
 import Navigation from './components/Navigation'
+import StatusBar from './components/StatusBar'
 
 smoothscroll.polyfill()
 
@@ -29,15 +30,6 @@ const celciusTemp = (scale: number, temp: number) =>
 
 const AppContainer = styled.div`
   position: relative;
-`
-
-const StatusBar = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: ${safeAreaInsets.top}px;
-  background: rgba(0,0,0,0.4);
 `
 
 const RangeContainer = styled.div`
@@ -191,7 +183,7 @@ const App: React.FC = () => {
       <Navigation>
         <Button onClick={scrollToZeroCelcius}>0ºC</Button>
       </Navigation>
-      {safeAreaInsets.support && <StatusBar>${safeAreaInsets.top}px</StatusBar>}
+      {safeAreaInsets.support && <StatusBar />}
       <Debugger />
     </AppContainer>
   );
