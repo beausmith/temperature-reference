@@ -8,6 +8,7 @@ import GlobalStyle from './components/GlobalStyle'
 import Button from './components/Button'
 import Navigation from './components/Navigation'
 import StatusBar from './components/StatusBar'
+import Version from './components/Version'
 
 smoothscroll.polyfill()
 
@@ -180,7 +181,8 @@ const App: React.FC = () => {
         </Indicator>
       </RangeContainer>
       <Navigation>
-        <Button onClick={scrollToZeroCelcius}>0ºC</Button>
+        <Button fullWidth onClick={scrollToZeroCelcius}>0ºC</Button>
+        <Version />
       </Navigation>
       {safeAreaInsets.top && <StatusBar height={safeAreaInsets.top} />}
     </AppContainer>
