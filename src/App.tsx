@@ -3,9 +3,8 @@ import safeAreaInsets from 'safe-area-insets'
 import styled from 'styled-components'
 import smoothscroll from 'smoothscroll-polyfill'
 
-import './App.css'
-
 import useWindowScroll from './hooks/useWindowScroll'
+import GlobalStyle from './components/GlobalStyle'
 import Button from './components/Button'
 import Navigation from './components/Navigation'
 import StatusBar from './components/StatusBar'
@@ -157,6 +156,7 @@ const App: React.FC = () => {
   }, [zeroScrollTop])
   return (
     <AppContainer>
+      <GlobalStyle />
       <RangeContainer>
         <Range>
           <Weather />
