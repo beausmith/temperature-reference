@@ -84,7 +84,8 @@ interface ItemProps {
   name: string
   celcius: number
   time: string
-  color: string
+  background: string
+  color?: string
   right?: string
   left?: string
 }
@@ -94,13 +95,14 @@ const StyledItem = styled.div<ItemProps>`
   left: ${({ left, right }) => (!left && !right ? '25vw' : left && !right ? left : undefined)};
   right: ${({ left, right }) => (right && !left ? right : undefined)};
   height: ${rowHeight / 2}px;
-  background: ${({ color }) => (color || undefined)};
+  background: ${({ background }) => (background || undefined)};
   font-size: 0.8rem;
   line-height: ${rowHeight / 2}px;
   padding: 0 0.5rem;
   border-radius: ${rowHeight / 2}px;
   margin-top: -${rowHeight / 4}px;
   white-space: nowrap;
+  color: ${({ color }) => color || undefined};
   &::before,
   &::after {
     content: '';
@@ -108,7 +110,7 @@ const StyledItem = styled.div<ItemProps>`
     top: ${rowHeight / 4}px;
     width: 2vw;
     border-top: 1px solid tan;
-    border-color: ${({ color }) => (color || undefined)};
+    border-color: ${({ background }) => (background || undefined)};
   }
   &::before {
     left: -2vw;
@@ -161,11 +163,11 @@ const App: React.FC = () => {
       <RangeContainer>
         <Range>
           <Weather />
-          <Item name="Pizza" time="5m" celcius={300} color="lightblue" />
-          <Item name="Chicken Breast" time="1h" celcius={65} color="tan" />
-          <Item name="Egg" time="63m" celcius={63} color="lightgrey" />
-          <Item name="Hanger Steak" time="2–4h" celcius={54.4} color="cornflowerblue" />
-          <Item name="Salmon" time="1h" celcius={55} color="salmon" right="25vw" />
+          <Item name="Pizza" time="5m" celcius={300} background="firebrick" color="white" />
+          <Item name="Chicken Breast" time="1h" celcius={65} background="tan" />
+          <Item name="Egg" time="63m" celcius={63} background="lightgrey" />
+          <Item name="Hanger Steak" time="2–4h" celcius={54.4} background="cornflowerblue" color="white" />
+          <Item name="Salmon" time="1h" celcius={55} background="salmon" right="25vw" color="white" />
           {celciusRange.map(c => (
             <Row key={c}>
               <Label>{c}ºC</Label>
