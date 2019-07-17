@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import safeAreaInsets from 'safe-area-insets'
 import styled from 'styled-components'
 import smoothscroll from 'smoothscroll-polyfill'
@@ -157,6 +157,11 @@ const App: React.FC = () => {
     }
     triggerScroll()
   }, [zeroScrollTop])
+  useEffect(() => {
+    if (process.env.REACT_APP_BRANCH === 'master') {
+      document.title = 'Celsius β'
+    }
+  }, [])
   return (
     <AppContainer>
       <GlobalStyle />
