@@ -192,7 +192,7 @@ const App: React.FC = () => {
         <Button fullWidth onClick={scrollToZeroCelcius}>0ºC</Button>
         <Version />
       </Navigation>
-      {safeAreaInsets.top && <StatusBar height={safeAreaInsets.top} />}
+      {!!safeAreaInsets.top && <StatusBar height={safeAreaInsets.top} />}
     </AppContainer>
   );
 }
