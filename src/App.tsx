@@ -158,8 +158,8 @@ const App: React.FC = () => {
     triggerScroll()
   }, [zeroScrollTop])
   useEffect(() => {
-    if (process.env.REACT_APP_BRANCH === 'master') {
-      document.title = 'Celsius β'
+    if (process.env.REACT_APP_BRANCH !== 'production') {
+      document.title = `Celsius - ${process.env.REACT_APP_BRANCH}`
     }
   }, [])
   return (
