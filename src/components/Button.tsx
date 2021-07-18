@@ -1,13 +1,10 @@
 import styled from 'styled-components'
 
-interface ButtonAttrs extends HTMLButtonElement {
-  readonly type: string
-}
 interface ButtonProps {
   fullWidth?: boolean
 }
-const Button = styled.button.attrs((attrs: ButtonAttrs) => ({
-  type: attrs.type || 'button',
+const Button = styled.button.attrs(({ type = 'button' }) => ({
+  type,
 }))<ButtonProps>`
   appearance: none;
   width: ${({ fullWidth = false }) => fullWidth ? '100%' : undefined };
