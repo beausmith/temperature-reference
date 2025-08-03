@@ -31,10 +31,10 @@ const AppContainer = styled.div`
   position: relative;
 `
 
-const RangeContainer = styled.div`
+const ScopeContainer = styled.div`
   padding: ${clientHeight / 2}px 0;
 `
-const Range = styled.div`
+const Scope = styled.div`
   position: relative;
   margin: -${rowHeight / 2}px 0;
   background:
@@ -165,8 +165,8 @@ const App: React.FC = () => {
   return (
     <AppContainer>
       <GlobalStyle />
-      <RangeContainer>
-        <Range>
+      <ScopeContainer>
+        <Scope>
 
           {/* Basics */}
           <Weather />
@@ -216,13 +216,13 @@ const App: React.FC = () => {
               <Label>{toF(c)}ºF</Label>
             </Row>
           ))}
-        </Range>
+        </Scope>
         <Indicator onClick={scrollToZeroCelcius}>
           {isZeroInit && (
             <Label>{currentTemp}ºC / {toF(parseFloat(currentTemp)).toFixed(1)}ºF</Label>
           )}
         </Indicator>
-      </RangeContainer>
+      </ScopeContainer>
       <Navigation>
         <Button fullWidth onClick={scrollToZeroCelcius}>0ºC</Button>
         <Version />
