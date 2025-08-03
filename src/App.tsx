@@ -50,16 +50,16 @@ const Row = styled.div`
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
   & > div:first-child {
-    margin-left: 3vw;
+    margin-left: 2vw;
   }
   & > div:last-child {
-    margin-right: 3vw;
+    margin-right: 2vw;
   }
 
 `
 const Label = styled.div`
   text-align: center;
-  min-width: 4em;
+  min-width: 3.5em;
   background: white;
   border: 1px solid #dddddd;
   border-radius: ${rowHeight / 2}px;
@@ -83,7 +83,7 @@ const Indicator = styled.div`
 interface ItemProps {
   name: string
   celcius: number
-  time: string
+  time?: string
   background: string
   color?: string
   right?: string
@@ -102,7 +102,7 @@ const StyledItem = styled.div<ItemProps>`
   border-radius: ${rowHeight / 2}px;
   margin-top: -${rowHeight / 4}px;
   white-space: nowrap;
-  color: ${({ color }) => color || undefined};
+  color: ${({ color }) => color || "white"};
   &::before,
   &::after {
     content: '';
@@ -125,7 +125,7 @@ const StyledItem = styled.div<ItemProps>`
 `
 const Item = (props: ItemProps) => {
   const { name, celcius, time } = props
-  return <StyledItem {...props} tabIndex={-1}>{name} {time} @ {celcius}ºC</StyledItem>
+  return <StyledItem {...props} tabIndex={-1}>{name} • {time && `${time} @`} {celcius}ºC</StyledItem>
 }
 
 const Weather = styled.div`
@@ -167,13 +167,48 @@ const App: React.FC = () => {
       <GlobalStyle />
       <RangeContainer>
         <Range>
+
+          {/* Basics */}
           <Weather />
-          <Item name="Sauna" time="15m" celcius={80} background="indianred" color="white" />
-          <Item name="Pizza" time="5m" celcius={300} background="firebrick" color="white" />
-          <Item name="Chicken Breast" time="1h" celcius={65} background="tan" />
-          <Item name="Egg" time="63m" celcius={63} background="lightgrey" />
-          <Item name="Hanger Steak" time="2–4h" celcius={54.4} background="cornflowerblue" color="white" />
-          <Item name="Salmon" time="1h" celcius={55} background="salmon" right="25vw" color="white" />
+          <Item name="Sauna" time="15m" celcius={80} background="cornflowerblue" />
+          <Item name="Bath Tub" celcius={38} background="cornflowerblue" right="25vw" />
+          <Item name="Pizza" celcius={300} background="firebrick" />
+          <Item name="Tea/Coffee" celcius={60} background="black" right="25vw" />
+          <Item name="Berries" time="30s" celcius={52} background="black" right="25vw" />
+
+          {/* Other Meats */}
+          <Item name="Chicken Breast" time="1h" celcius={65} background="tan" color="black" />
+          <Item name="Egg" time="63m" celcius={63} background="lightgrey" color="black" />
+          <Item name="Salmon" time="1h" celcius={55} background="salmon" right="25vw" />
+          <Item name="Fish (FDA)" celcius={62} time="30m" background="salmon" right="25vw" />
+
+          {/* Chicken */}
+          {/* Pork */}
+          {/* Beef */}
+          <Item name="Filet Mignon" time="2h" celcius={50} background="indianred" left="15vw" />
+          <Item name="Steak (Rare)" time="1–2h" celcius={54} background="indianred" left="15vw" />
+          <Item name="Steak (Medium)" time="1–2h" celcius={58} background="indianred" left="15vw" />
+          <Item name="Steak (Well)" time="1–2h" celcius={68} background="indianred" left="15vw" />
+          <Item name="Roast (Rare)" time="7–16h" celcius={56} background="indianred" left="40vw" />
+          <Item name="Roast (Medium)" time="6–14h" celcius={60} background="indianred" left="40vw" />
+          <Item name="Roast (Well)" time="5–11h" celcius={70} background="indianred" left="40vw" />
+          <Item name="Tough Cut (Rare)" time="24–48h" celcius={55} background="indianred" left="60vw" />
+          <Item name="Tough Cut (Medium)" time="24–30h" celcius={65} background="indianred" left="60vw" />
+          <Item name="Tough Cut (Well)" time="8–16h" celcius={85} background="indianred" left="60vw" />
+
+          {/* Foodlab sousvide guides */}
+          {/* ChefSteps sousvide guides */}
+          {/* 170°F chicken legs */}
+          {/* 225°F slow grill steak */}
+          {/* Beef via https://blog.thermoworks.com/beef/steak-temps-getting-it-right/#chart
+            Bleu Steak	110°F	43°C
+            Rare Steak	120–130°F	49–54°C
+            Medium Rare Steak	130–135°F	54–57°C
+            Medium Steak	135–145°F	57–63°C
+            Medium Well Steak	145–155°F	63–68°C
+            Well Done Steak	155°F and up	68°C and up */}
+
+
           {celciusRange.map(c => (
             <Row key={c}>
               <Label>{c}ºC</Label>
@@ -182,7 +217,7 @@ const App: React.FC = () => {
             </Row>
           ))}
         </Range>
-        <Indicator>
+        <Indicator onClick={scrollToZeroCelcius}>
           {isZeroInit && (
             <Label>{currentTemp}ºC / {toF(parseFloat(currentTemp)).toFixed(1)}ºF</Label>
           )}
