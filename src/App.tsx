@@ -185,16 +185,16 @@ const App: React.FC = () => {
           {/* Chicken */}
           {/* Pork */}
           {/* Beef */}
-          <Item name="Filet Mignon" time="2h" celcius={50} background="indianred" left="15vw" />
+          {/* <Item name="Filet Mignon" time="2h" celcius={50} background="indianred" left="15vw" /> */}
           <Item name="Steak (Rare)" time="1–2h" celcius={54} background="indianred" left="15vw" />
-          <Item name="Steak (Medium)" time="1–2h" celcius={58} background="indianred" left="15vw" />
-          <Item name="Steak (Well)" time="1–2h" celcius={68} background="indianred" left="15vw" />
-          <Item name="Roast (Rare)" time="7–16h" celcius={56} background="indianred" left="40vw" />
-          <Item name="Roast (Medium)" time="6–14h" celcius={60} background="indianred" left="40vw" />
-          <Item name="Roast (Well)" time="5–11h" celcius={70} background="indianred" left="40vw" />
-          <Item name="Tough Cut (Rare)" time="24–48h" celcius={55} background="indianred" left="60vw" />
-          <Item name="Tough Cut (Medium)" time="24–30h" celcius={65} background="indianred" left="60vw" />
-          <Item name="Tough Cut (Well)" time="8–16h" celcius={85} background="indianred" left="60vw" />
+          {/* <Item name="Steak (Medium)" time="1–2h" celcius={58} background="indianred" left="15vw" /> */}
+          {/* <Item name="Steak (Well)" time="1–2h" celcius={68} background="indianred" left="15vw" /> */}
+          {/* <Item name="Roast (Rare)" time="7–16h" celcius={56} background="indianred" left="20vw" /> */}
+          {/* <Item name="Roast (Medium)" time="6–14h" celcius={60} background="indianred" left="20vw" /> */}
+          {/* <Item name="Roast (Well)" time="5–11h" celcius={70} background="indianred" left="20vw" /> */}
+          {/* <Item name="Tough Cut (Rare)" time="24–48h" celcius={55} background="indianred" left="25vw" /> */}
+          {/* <Item name="Tough Cut (Medium)" time="24–30h" celcius={65} background="indianred" left="25vw" /> */}
+          {/* <Item name="Tough Cut (Well)" time="8–16h" celcius={85} background="indianred" left="25vw" /> */}
 
           {/* Foodlab sousvide guides */}
           {/* ChefSteps sousvide guides */}
