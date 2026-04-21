@@ -15,12 +15,12 @@ z-index: 999;
 overflow: auto;
 `
 
-const Debugger: React.FC = ({ children }) => (
+const Debugger: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
   <Container>
     <div>{children}</div>
     <div>clientHeight: {clientHeight}</div>
     <pre>{JSON.stringify({safeAreaInsets}, undefined, 2)}</pre>
-    <pre>{JSON.stringify(process.env, undefined, 2)}</pre>
+    <pre>{JSON.stringify(import.meta.env, undefined, 2)}</pre>
   </Container>
 )
 

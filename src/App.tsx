@@ -89,20 +89,27 @@ interface ItemProps {
   right?: string
   left?: string
 }
-const StyledItem = styled.div<ItemProps>`
+interface StyledItemProps {
+  $celcius: number
+  $background: string
+  $color?: string
+  $right?: string
+  $left?: string
+}
+const StyledItem = styled.div<StyledItemProps>`
   position: absolute;
-  top: ${({ celcius }) => (celciusTemp(scale, celcius))}px;
-  left: ${({ left, right }) => (!left && !right ? '25vw' : left && !right ? left : undefined)};
-  right: ${({ left, right }) => (right && !left ? right : undefined)};
+  top: ${({ $celcius }) => (celciusTemp(scale, $celcius))}px;
+  left: ${({ $left, $right }) => (!$left && !$right ? '25vw' : $left && !$right ? $left : undefined)};
+  right: ${({ $left, $right }) => ($right && !$left ? $right : undefined)};
   height: ${rowHeight / 2}px;
-  background: ${({ background }) => (background || undefined)};
+  background: ${({ $background }) => ($background || undefined)};
   font-size: 0.8rem;
   line-height: ${rowHeight / 2}px;
   padding: 0 0.5rem;
   border-radius: ${rowHeight / 2}px;
   margin-top: -${rowHeight / 4}px;
   white-space: nowrap;
-  color: ${({ color }) => color || "white"};
+  color: ${({ $color }) => $color || "white"};
   &::before,
   &::after {
     content: '';
@@ -110,7 +117,7 @@ const StyledItem = styled.div<ItemProps>`
     top: ${rowHeight / 4}px;
     width: 2vw;
     border-top: 1px solid tan;
-    border-color: ${({ background }) => (background || undefined)};
+    border-color: ${({ $background }) => ($background || undefined)};
   }
   &::before {
     left: -2vw;
@@ -123,10 +130,18 @@ const StyledItem = styled.div<ItemProps>`
     outline: none;
   }
 `
-const Item = (props: ItemProps) => {
-  const { name, celcius, time } = props
-  return <StyledItem {...props} tabIndex={-1}>{name} • {time && `${time} @`} {celcius}ºC</StyledItem>
-}
+const Item = ({ name, celcius, time, background, color, right, left }: ItemProps) => (
+  <StyledItem
+    $celcius={celcius}
+    $background={background}
+    $color={color}
+    $right={right}
+    $left={left}
+    tabIndex={-1}
+  >
+    {name} • {time && `${time} @`} {celcius}ºC
+  </StyledItem>
+)
 
 const Weather = styled.div`
   position: absolute;
@@ -158,8 +173,8 @@ const App: React.FC = () => {
     triggerScroll()
   }, [zeroScrollTop])
   useEffect(() => {
-    if (process.env.REACT_APP_BRANCH !== 'production') {
-      document.title = `Celsius - ${process.env.REACT_APP_BRANCH}`
+    if (import.meta.env.VITE_BRANCH !== 'production') {
+      document.title = `Celsius - ${import.meta.env.VITE_BRANCH}`
     }
   }, [])
   return (
@@ -224,7 +239,7 @@ const App: React.FC = () => {
         </Indicator>
       </ScopeContainer>
       <Navigation>
-        <Button fullWidth onClick={scrollToZeroCelcius}>0ºC</Button>
+        <Button $fullWidth onClick={scrollToZeroCelcius}>0ºC</Button>
         <Version />
       </Navigation>
       {!!safeAreaInsets.top && <StatusBar height={safeAreaInsets.top} />}

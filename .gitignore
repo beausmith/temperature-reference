@@ -10,6 +10,16 @@
 
 # production
 /build
+/dist
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Vite config compilation output (tsc -b artifacts)
+vite.config.js
+vite.config.d.ts
+vitest.config.js
+vitest.config.d.ts
 
 # misc
 .DS_Store

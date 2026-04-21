@@ -18,11 +18,11 @@ const StyledVersion = styled.a`
   }
 `
 
-const commitRef = process.env.REACT_APP_COMMIT_REF
+const commitRef = import.meta.env.VITE_COMMIT_REF
 
 const Version = () => (
   <StyledVersion href="https://github.com/beausmith/temperature-reference/">
-    <div>{`v${process.env.REACT_APP_VERSION}`}</div>
+    <div>{`v${import.meta.env.VITE_VERSION}`}</div>
     <div>{commitRef ? commitRef.substring(0, 7) : '0000000'}</div>
   </StyledVersion>
 )
