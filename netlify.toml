@@ -1,0 +1,9 @@
+[build]
+  command = "yarn build"
+  publish = "dist"
+
+[[redirects]]
+  from = "https://celcius.life/*"
+  to = "https://celsius.life/:splat"
+  status = 301
+  force = true
