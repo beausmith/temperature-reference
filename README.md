@@ -13,4 +13,36 @@ Beta test the latest build: https://master--celsius-life.netlify.app/
 
 ## Dev
 
-This project was bootstrapped with TypeScript version of [Create React App](https://github.com/facebook/create-react-app).
+Built with [React](https://react.dev) 19, [TypeScript](https://www.typescriptlang.org), [Vite](https://vite.dev), and [styled-components](https://styled-components.com). Deployed as a PWA via [Netlify](https://www.netlify.com).
+
+**Prerequisites:** Node.js 22 (see `.nvmrc`)
+
+### Running locally
+
+```bash
+yarn install
+yarn start
+```
+
+Starts a dev server at http://localhost:5173.
+
+### Testing
+
+```bash
+yarn test          # run tests once
+yarn test:watch    # run tests in watch mode
+```
+
+### Production build
+
+```bash
+yarn build         # type-check + bundle into dist/
+yarn preview       # serve dist/ at http://localhost:4173
+```
+
+### Branches
+
+| Branch | Deploys to |
+|--------|-----------|
+| `production` | https://celsius.life |
+| `master` | https://master--celsius-life.netlify.app |
