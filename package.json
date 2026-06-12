@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@testing-library/dom": "^10.0.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.5.2",
@@ -23,16 +24,16 @@
     "vite-plugin-pwa": "^0.21.0",
     "vitest": "^3.1.2",
     "web-vitals": "^5.0.2",
+    "workbox-build": "^7.0.0",
     "workbox-core": "^7.0.0",
     "workbox-expiration": "^7.0.0",
     "workbox-precaching": "^7.0.0",
     "workbox-routing": "^7.0.0",
-    "workbox-build": "^7.0.0",
     "workbox-strategies": "^7.0.0",
-    "workbox-window": "^7.0.0",
-    "@testing-library/dom": "^10.0.0"
+    "workbox-window": "^7.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "@vitest/coverage-v8": "^3.1.2",
     "jsdom": "^26.1.0"
   },
@@ -42,7 +43,8 @@
     "preview": "vite preview",
     "test": "NODE_OPTIONS=--no-experimental-webstorage vitest run",
     "test:watch": "NODE_OPTIONS=--no-experimental-webstorage vitest",
-    "test:coverage": "NODE_OPTIONS=--no-experimental-webstorage vitest run --coverage"
+    "test:coverage": "NODE_OPTIONS=--no-experimental-webstorage vitest run --coverage",
+    "test:e2e": "playwright test"
   },
   "browserslist": {
     "production": [

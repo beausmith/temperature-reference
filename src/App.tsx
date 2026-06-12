@@ -156,28 +156,40 @@ const Weather = styled.div`
 
 const lastTempKey = 'lastTemp'
 
+// safeAreaInsets reads 0 on a cold launch and only settles once the viewport
+// does, so consumers must subscribe to changes rather than read it per render.
+const useSafeAreaInsetTop = (): number => {
+  const [top, setTop] = useState(safeAreaInsets.top)
+  useEffect(() => {
+    const handleChange = () => setTop(safeAreaInsets.top)
+    safeAreaInsets.onChange(handleChange)
+    return () => safeAreaInsets.offChange(handleChange)
+  }, [])
+  return top
+}
+
 const App: React.FC = () => {
   const { y } = useWindowScroll()
+  const safeAreaInsetTop = useSafeAreaInsetTop()
   const [isZeroInit, setIsZeroInit] = useState(false)
   if (!!y && !isZeroInit) setIsZeroInit(true)
-  const zeroScrollTop = (celciusMax / scale) * rowHeight - (0 / scale * rowHeight) + rowHeight / 2 - safeAreaInsets.top / 2
+  const zeroScrollTop = (celciusMax / scale) * rowHeight - (0 / scale * rowHeight) + rowHeight / 2 - safeAreaInsetTop / 2
   const currentTemp = ((zeroScrollTop - y) / 10).toFixed(1)
   const scrollToZeroCelcius = () => {
     window.scroll({ top: zeroScrollTop, behavior: 'smooth' })
   }
-  useLayoutEffect(() => {
+  const [initialTemp] = useState(() => {
     const lastTemp = parseFloat(window.localStorage.getItem(lastTempKey) ?? '')
-    const initialTop = Number.isFinite(lastTemp)
-      ? zeroScrollTop - lastTemp * (rowHeight / scale)
-      : zeroScrollTop
-    const triggerScroll = () => {
-      window.scrollTo({ top: initialTop + 1 })
-      window.setTimeout(() => {
-        window.scrollTo({ top: initialTop })
-      }, 200)
-    }
-    triggerScroll()
-  }, [zeroScrollTop])
+    return Number.isFinite(lastTemp) ? lastTemp : 0
+  })
+  useLayoutEffect(() => {
+    const initialTop = zeroScrollTop - initialTemp * (rowHeight / scale)
+    window.scrollTo({ top: initialTop + 1 })
+    const timeout = window.setTimeout(() => {
+      window.scrollTo({ top: initialTop })
+    }, 200)
+    return () => window.clearTimeout(timeout)
+  }, [zeroScrollTop, initialTemp])
   useEffect(() => {
     if (isZeroInit) window.localStorage.setItem(lastTempKey, currentTemp)
   }, [isZeroInit, currentTemp])
@@ -251,7 +263,7 @@ const App: React.FC = () => {
         <Button $fullWidth onClick={scrollToZeroCelcius}>0ºC</Button>
         <Version />
       </Navigation>
-      {!!safeAreaInsets.top && <StatusBar height={safeAreaInsets.top} />}
+      {!!safeAreaInsetTop && <StatusBar height={safeAreaInsetTop} />}
     </AppContainer>
   );
 }
