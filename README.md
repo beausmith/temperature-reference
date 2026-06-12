@@ -14,6 +14,7 @@ I built this app to have a reference when cooking and traveling… and then foun
 - **Food safety zone highlight** — A visible "danger zone" band (40°F–140°F / 4°C–60°C) where bacteria multiply. This is a genuinely useful kitchen reference.
 - **Shareable deep links** — celsius.life/#65 scrolls to 65°C. Handy for texting a cook temp to someone.
 - **Dark mode** — Kitchens are often dim; a dark theme is practical.
+- **Playwright (browser) tests** — Cover the behaviors jsdom can't: real scrolling and layout, the indicator updating while scrolling, the smooth-scroll 0ºC button, and scroll restore across an actual page reload.
 
 Similar apps / sites and what they do:
 
