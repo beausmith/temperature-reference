@@ -154,6 +154,8 @@ const Weather = styled.div`
   border-radius: ${rowHeight / 2}px;
 `
 
+const lastTempKey = 'lastTemp'
+
 const App: React.FC = () => {
   const { y } = useWindowScroll()
   const [isZeroInit, setIsZeroInit] = useState(false)
@@ -164,14 +166,21 @@ const App: React.FC = () => {
     window.scroll({ top: zeroScrollTop, behavior: 'smooth' })
   }
   useLayoutEffect(() => {
+    const lastTemp = parseFloat(window.localStorage.getItem(lastTempKey) ?? '')
+    const initialTop = Number.isFinite(lastTemp)
+      ? zeroScrollTop - lastTemp * (rowHeight / scale)
+      : zeroScrollTop
     const triggerScroll = () => {
-      window.scrollTo({ top: zeroScrollTop + 1 })
+      window.scrollTo({ top: initialTop + 1 })
       window.setTimeout(() => {
-        window.scrollTo({ top: zeroScrollTop })
+        window.scrollTo({ top: initialTop })
       }, 200)
     }
     triggerScroll()
   }, [zeroScrollTop])
+  useEffect(() => {
+    if (isZeroInit) window.localStorage.setItem(lastTempKey, currentTemp)
+  }, [isZeroInit, currentTemp])
   useEffect(() => {
     if (import.meta.env.VITE_BRANCH !== 'production') {
       document.title = `Celsius - ${import.meta.env.VITE_BRANCH}`

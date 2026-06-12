@@ -4,6 +4,7 @@ I built this app to have a reference when cooking and traveling… and then foun
 
 ## Future Feature Ideas
 
+- ✅ Re-opening app restores temperature / scroll position.
 - **More reference items**
     — Several cooking temps are already commented out in App.tsx (medium/well-done steak, roasts).
     - Candy-making stages (soft ball, hard crack), bread baking, and common baking temps (325°F/375°F/425°F) would round out the cooking section well.
