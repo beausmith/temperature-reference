@@ -8,6 +8,7 @@ import GlobalStyle from './components/GlobalStyle'
 import Button from './components/Button'
 import Navigation from './components/Navigation'
 import StatusBar from './components/StatusBar'
+import TempKeypad from './components/TempKeypad'
 import Version from './components/Version'
 
 smoothscroll.polyfill()
@@ -172,12 +173,17 @@ const App: React.FC = () => {
   const { y } = useWindowScroll()
   const safeAreaInsetTop = useSafeAreaInsetTop()
   const [isZeroInit, setIsZeroInit] = useState(false)
+  const [isKeypadOpen, setIsKeypadOpen] = useState(false)
   if (!!y && !isZeroInit) setIsZeroInit(true)
   const zeroScrollTop = (celciusMax / scale) * rowHeight - (0 / scale * rowHeight) + rowHeight / 2 - safeAreaInsetTop / 2
   const currentTemp = ((zeroScrollTop - y) / 10).toFixed(1)
-  const scrollToZeroCelcius = () => {
-    window.scroll({ top: zeroScrollTop, behavior: 'smooth' })
+  const restoreTimeoutRef = React.useRef<number | undefined>(undefined)
+  const scrollToCelsius = (celsius: number) => {
+    // Cancel any pending restore scroll so it doesn't override a smooth scroll
+    window.clearTimeout(restoreTimeoutRef.current)
+    window.scroll({ top: zeroScrollTop - celsius * (rowHeight / scale), behavior: 'smooth' })
   }
+  const scrollToZeroCelcius = () => scrollToCelsius(0)
   const [initialTemp] = useState(() => {
     const lastTemp = parseFloat(window.localStorage.getItem(lastTempKey) ?? '')
     return Number.isFinite(lastTemp) ? lastTemp : 0
@@ -185,10 +191,10 @@ const App: React.FC = () => {
   useLayoutEffect(() => {
     const initialTop = zeroScrollTop - initialTemp * (rowHeight / scale)
     window.scrollTo({ top: initialTop + 1 })
-    const timeout = window.setTimeout(() => {
+    restoreTimeoutRef.current = window.setTimeout(() => {
       window.scrollTo({ top: initialTop })
     }, 200)
-    return () => window.clearTimeout(timeout)
+    return () => window.clearTimeout(restoreTimeoutRef.current)
   }, [zeroScrollTop, initialTemp])
   useEffect(() => {
     if (isZeroInit) window.localStorage.setItem(lastTempKey, currentTemp)
@@ -261,8 +267,15 @@ const App: React.FC = () => {
       </ScopeContainer>
       <Navigation>
         <Button $fullWidth onClick={scrollToZeroCelcius}>0ºC</Button>
+        <Button $fullWidth onClick={() => setIsKeypadOpen(true)}>Go</Button>
         <Version />
       </Navigation>
+      {isKeypadOpen && (
+        <TempKeypad
+          onClose={() => setIsKeypadOpen(false)}
+          onSubmit={scrollToCelsius}
+        />
+      )}
       {!!safeAreaInsetTop && <StatusBar height={safeAreaInsetTop} />}
     </AppContainer>
   );

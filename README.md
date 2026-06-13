@@ -5,11 +5,13 @@ I built this app to have a reference when cooking and traveling… and then foun
 ## Future Feature Ideas
 
 - ✅ Re-opening app restores temperature / scroll position.
+- ✅ "Go" button opens a numeric keypad to jump to any temperature (°C or °F); selected unit is remembered.
 - **More reference items**
     — Several cooking temps are already commented out in App.tsx (medium/well-done steak, roasts).
     - Candy-making stages (soft ball, hard crack), bread baking, and common baking temps (325°F/375°F/425°F) would round out the cooking section well.
 - **Categories/Sections/Tabs/Filters** — Once there are more items, grouping them (Cooking, Weather, Body/Health, Food Safety) with visual dividers or color-coded labels would reduce cognitive load.
-- **Jump-to / Search / Text Filter** — A text input that scrolls to a typed temperature. Useful when you need a specific temp fast.
+- **Jump-to** — A text input that scrolls to a typed temperature. Useful when you need a specific temp fast.
+- Search / Text Filter of available temperature labels.
 - **Fahrenheit/Celsius toggle mode** — A toggle to flip which unit is primary. Useful for users who are familiar with F or C.
 - **Food safety zone highlight** — A visible "danger zone" band (40°F–140°F / 4°C–60°C) where bacteria multiply. This is a genuinely useful kitchen reference.
 - **Shareable deep links** — celsius.life/#65 scrolls to 65°C. Handy for texting a cook temp to someone.
