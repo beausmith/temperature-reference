@@ -2,10 +2,13 @@
 
 I built this app to have a reference when cooking and traveling… and then found it to be a fun side project to tinker with.
 
-## Future Feature Ideas
-
+## Features
 - ✅ Re-opening app restores temperature / scroll position.
 - ✅ "Go" button opens a numeric keypad to jump to any temperature (°C or °F); selected unit is remembered.
+- ✅ Playwright (browser) tests — real scrolling, the smooth-scroll 0ºC button, and scroll restore across reloads are covered in `e2e/`. Remaining idea: run them against iOS Safari/WebKit to exercise real safe-area insets.
+
+## Future Feature Ideas
+
 - **More reference items**
     — Several cooking temps are already commented out in App.tsx (medium/well-done steak, roasts).
     - Candy-making stages (soft ball, hard crack), bread baking, and common baking temps (325°F/375°F/425°F) would round out the cooking section well.
@@ -15,7 +18,6 @@ I built this app to have a reference when cooking and traveling… and then foun
 - **Food safety zone highlight** — A visible "danger zone" band (40°F–140°F / 4°C–60°C) where bacteria multiply. This is a genuinely useful kitchen reference.
 - **Shareable deep links** — celsius.life/#65 scrolls to 65°C. Handy for texting a cook temp to someone.
 - **Dark mode** — Kitchens are often dim; a dark theme is practical.
-- ✅ Playwright (browser) tests — real scrolling, the smooth-scroll 0ºC button, and scroll restore across reloads are covered in `e2e/`. Remaining idea: run them against iOS Safari/WebKit to exercise real safe-area insets.
 
 Similar apps / sites and what they do:
 
@@ -67,15 +69,23 @@ yarn preview       # serve dist/ at http://localhost:4173
 
 ### PWA icons & splash screens
 
-App icons (incl. the Android maskable icon) and the iOS launch images are
-generated from `public/app-icon.png` using macOS `sips`:
+Source files:
+- `assets/glyph.svg` — the white `°C` glyph (transparent), composited onto icons/splashes
+- `public/icons/icon-maskable-512.png` — hand-made full-bleed gradient maskable icon; also the gradient source that the generators sample
+
+Both generators render via your locally installed Chrome (Playwright), so no
+downloads are needed:
 
 ```bash
-./scripts/generate-pwa-assets.sh
+node scripts/generate-icons.mjs    # any + apple-touch icons → public/icons/
+node scripts/generate-splash.mjs   # iOS launch images → public/splashscreens/
+node scripts/generate-splash.mjs --samples   # a few sizes with center guides, for tuning
 ```
 
-Re-run after changing the master icon, then update the `apple-touch-startup-image`
-`<link>` media queries in `index.html` if the device list changes.
+The maskable icon is hand-made and left untouched. Tunables live at the top of
+each script (`FILL`, `Y_NUDGE`, `GLYPH_SCALE`). After changing the device list in
+`generate-splash.mjs`, update the matching `apple-touch-startup-image` `<link>`
+media queries in `index.html`.
 
 ### Branches
 
