@@ -6,7 +6,9 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      // Registration + auto-reload is handled manually in
+      // src/serviceWorkerRegistration.ts, so don't inject a second registerSW.js.
+      injectRegister: null,
       strategies: 'injectManifest',
       srcDir: 'src',
       filename: 'service-worker.ts',

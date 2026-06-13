@@ -4,72 +4,60 @@ const isLocalhost = Boolean(
     window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
 );
 
-type Config = {
-  onSuccess?: (registration: ServiceWorkerRegistration) => void;
-  onUpdate?: (registration: ServiceWorkerRegistration) => void;
-};
+// Whether a service worker was already controlling the page when it loaded.
+// On a first-ever visit this is false, so the initial clientsClaim() doesn't
+// trigger a needless reload. On later visits it's true, so when an updated
+// worker takes over we reload once to show the new deploy.
+const hadControllerAtStart =
+  'serviceWorker' in navigator && !!navigator.serviceWorker.controller;
+let reloading = false;
 
-export function register(config?: Config) {
+export function register() {
   if (import.meta.env.PROD && 'serviceWorker' in navigator) {
     const publicUrl = new URL(import.meta.env.BASE_URL, window.location.href);
     if (publicUrl.origin !== window.location.origin) {
       return;
     }
 
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!hadControllerAtStart || reloading) {
+        return;
+      }
+      reloading = true;
+      window.location.reload();
+    });
+
     window.addEventListener('load', () => {
       const swUrl = `${import.meta.env.BASE_URL}service-worker.js`;
 
       if (isLocalhost) {
-        checkValidServiceWorker(swUrl, config);
-
-        navigator.serviceWorker.ready.then(() => {
-          console.log(
-            'This web app is being served cache-first by a service worker.'
-          );
-        });
+        checkValidServiceWorker(swUrl);
       } else {
-        registerValidSW(swUrl, config);
+        registerValidSW(swUrl);
       }
     });
   }
 }
 
-function registerValidSW(swUrl: string, config?: Config) {
+function registerValidSW(swUrl: string) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
-      registration.onupdatefound = () => {
-        const installingWorker = registration.installing;
-        if (installingWorker == null) {
-          return;
+      // Long-lived installed PWAs may stay open across deploys, so poll for a
+      // newer worker hourly and whenever the app returns to the foreground.
+      window.setInterval(() => registration.update(), 60 * 60 * 1000);
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          registration.update();
         }
-        installingWorker.onstatechange = () => {
-          if (installingWorker.state === 'installed') {
-            if (navigator.serviceWorker.controller) {
-              console.log(
-                'New content is available and will be used when all tabs for this page are closed.'
-              );
-
-              if (config && config.onUpdate) {
-                config.onUpdate(registration);
-              }
-            } else {
-              console.log('Content is cached for offline use.');
-
-              if (config && config.onSuccess) {
-                config.onSuccess(registration);
-              }
-            }
-          }
-        };
-      };
+      });
     })
     .catch((error) => {
       console.error('Error during service worker registration:', error);
     });
 }
 
-function checkValidServiceWorker(swUrl: string, config?: Config) {
+function checkValidServiceWorker(swUrl: string) {
   fetch(swUrl, {
     headers: { 'Service-Worker': 'script' },
   })
@@ -85,7 +73,7 @@ function checkValidServiceWorker(swUrl: string, config?: Config) {
           });
         });
       } else {
-        registerValidSW(swUrl, config);
+        registerValidSW(swUrl);
       }
     })
     .catch(() => {

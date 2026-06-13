@@ -43,8 +43,9 @@ registerRoute(
   })
 );
 
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
+// Activate a newly installed service worker immediately instead of waiting for
+// every tab to close. Combined with clientsClaim() above, the new worker takes
+// control of open pages right away; the page reloads itself on controllerchange.
+self.addEventListener('install', () => {
+  self.skipWaiting();
 });
