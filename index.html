@@ -3,7 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <title>Celsius</title>
-    <meta name="viewport" content="width=device-width, viewport-fit=cover" />
+    <!-- user-scalable=no is REQUIRED, do not remove. The current temperature is
+         derived from the window scroll position, so allowing pinch-zoom would
+         break temperature reading. This intentionally trips the Lighthouse
+         "[user-scalable=no] is used" accessibility check — that trade-off is deliberate. -->
+    <meta name="viewport" content="width=device-width, user-scalable=no, viewport-fit=cover" />
     <meta name="theme-color" content="#F3903F" />
     <meta name="apple-mobile-web-app-title" content="Celsius">
     <meta name="apple-mobile-web-app-capable" content="yes" />
