@@ -1,15 +1,32 @@
 {
+  "id": "/",
   "short_name": "Celsius",
-  "name": "Celsius",
+  "name": "Celsius — Temperature Reference",
+  "description": "A visual temperature reference for cooking and travel, with a Celsius/Fahrenheit ruler you can scroll and jump to any temperature.",
   "icons": [
     {
-      "src": "app-icon.png",
+      "src": "icons/icon-192.png",
       "type": "image/png",
-      "sizes": "512x512 64x64 32x32 24x24 16x16"
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "theme_color": "#000000",
+  "orientation": "portrait",
+  "theme_color": "#F3903F",
   "background_color": "#ffffff"
 }

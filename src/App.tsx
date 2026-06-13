@@ -212,8 +212,8 @@ const App: React.FC = () => {
 
           {/* Basics */}
           <Weather />
-          <Item name="Sauna" time="15m" celcius={80} background="cornflowerblue" />
-          <Item name="Bath Tub" celcius={38} background="cornflowerblue" right="25vw" />
+          <Item name="Sauna" time="15m" celcius={80} background="royalblue" />
+          <Item name="Bath Tub" celcius={38} background="royalblue" right="25vw" />
           <Item name="Pizza" celcius={300} background="firebrick" />
           <Item name="Tea/Coffee" celcius={60} background="black" right="25vw" />
           <Item name="Berries" time="30s" celcius={52} background="black" right="25vw" />

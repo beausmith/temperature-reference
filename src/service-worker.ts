@@ -38,7 +38,9 @@ registerRoute(
   new StaleWhileRevalidate({
     cacheName: 'images',
     plugins: [
-      new ExpirationPlugin({ maxEntries: 50 }),
+      // Cap the image cache and let entries expire after 30 days so stale
+      // images don't live forever.
+      new ExpirationPlugin({ maxEntries: 50, maxAgeSeconds: 30 * 24 * 60 * 60 }),
     ],
   })
 );
