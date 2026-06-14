@@ -85,6 +85,38 @@ test('fahrenheit readout derives from the raw value (350°F reads 350.0, not 350
   expect(label).toBeInTheDocument();
 });
 
+// Notched device: the env() probe resolves to a top inset (in px)
+const mockInsetTop = (px: number) =>
+  vi.spyOn(window, 'getComputedStyle').mockReturnValue(
+    { paddingTop: `${px}px`, getPropertyValue: () => '' } as unknown as CSSStyleDeclaration
+  );
+
+test('applies the safe-area top inset to the scroll math on cold launch', () => {
+  const spy = mockInsetTop(50);
+  render(<App />);
+  // zeroScrollTop = 3025 - 50/2 = 3000; initial restore scroll is +1
+  expect(window.scrollTo).toHaveBeenCalledWith({ top: 3000 + 1 });
+  spy.mockRestore();
+});
+
+test('0ºC button scrolls to the inset-adjusted zero position', () => {
+  const spy = mockInsetTop(62);
+  render(<App />);
+  fireEvent.click(screen.getByRole('button', { name: /0ºC/i }));
+  // zeroScrollTop = 3025 - 62/2 = 2994
+  expect(window.scroll).toHaveBeenCalledWith({ top: 2994, behavior: 'smooth' });
+  spy.mockRestore();
+});
+
+test('restores the saved temperature against the inset-adjusted basis', () => {
+  window.localStorage.setItem('lastTemp', '50.0');
+  const spy = mockInsetTop(62);
+  render(<App />);
+  // zeroScrollTop = 2994; initialTop = 2994 - 50*10 = 2494; restore scroll +1
+  expect(window.scrollTo).toHaveBeenCalledWith({ top: 2494 + 1 });
+  spy.mockRestore();
+});
+
 test('shows the branch name in the title on non-production branches', () => {
   vi.stubEnv('VITE_BRANCH', 'preview');
   render(<App />);

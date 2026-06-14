@@ -1,5 +1,4 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import safeAreaInsets from 'safe-area-insets'
 import styled from 'styled-components'
 import smoothscroll from 'smoothscroll-polyfill'
 
@@ -157,14 +156,31 @@ const Weather = styled.div`
 
 const lastTempKey = 'lastTemp'
 
-// safeAreaInsets reads 0 on a cold launch and only settles once the viewport
-// does, so consumers must subscribe to changes rather than read it per render.
+// Read the safe-area top inset synchronously from a CSS env() probe so it's
+// correct on a cold launch (the old safe-area-insets lib measured indirectly and
+// settled a frame late). Only used for the scroll-centering math below; the
+// status bar reads env() in CSS directly.
+const readInsetTop = (): number => {
+  const el = document.createElement('div')
+  el.style.cssText =
+    'position:fixed;top:0;padding-top:env(safe-area-inset-top);visibility:hidden;pointer-events:none'
+  document.body.appendChild(el)
+  const top = parseFloat(getComputedStyle(el).paddingTop) || 0
+  el.remove()
+  return top
+}
+
 const useSafeAreaInsetTop = (): number => {
-  const [top, setTop] = useState(safeAreaInsets.top)
-  useEffect(() => {
-    const handleChange = () => setTop(safeAreaInsets.top)
-    safeAreaInsets.onChange(handleChange)
-    return () => safeAreaInsets.offChange(handleChange)
+  const [top, setTop] = useState(readInsetTop)
+  useLayoutEffect(() => {
+    setTop(readInsetTop()) // re-read before first paint, then on rotation
+    const update = () => setTop(readInsetTop())
+    window.addEventListener('resize', update)
+    window.addEventListener('orientationchange', update)
+    return () => {
+      window.removeEventListener('resize', update)
+      window.removeEventListener('orientationchange', update)
+    }
   }, [])
   return top
 }
@@ -276,7 +292,7 @@ const App: React.FC = () => {
           onSubmit={scrollToCelsius}
         />
       )}
-      {!!safeAreaInsetTop && <StatusBar height={safeAreaInsetTop} />}
+      <StatusBar />
     </AppContainer>
   );
 }
