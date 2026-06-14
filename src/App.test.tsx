@@ -74,6 +74,17 @@ test('does not save a temperature before any scroll happens', () => {
   expect(window.localStorage.getItem('lastTemp')).toBeNull();
 });
 
+test('fahrenheit readout derives from the raw value (350°F reads 350.0, not 350.1)', async () => {
+  render(<App />);
+  // Scroll position for exactly 350°F (= 176.6667°C)
+  setScrollY(zeroScrollTop - ((350 - 32) * 5 / 9) * 10);
+  fireEvent.scroll(window);
+  const label = await screen.findByText(
+    (_, el) => el?.textContent === '176.7ºC / 350.0ºF' && el.children.length === 0
+  );
+  expect(label).toBeInTheDocument();
+});
+
 test('shows the branch name in the title on non-production branches', () => {
   vi.stubEnv('VITE_BRANCH', 'preview');
   render(<App />);

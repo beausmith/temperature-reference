@@ -216,7 +216,7 @@ const App: React.FC = () => {
           <Item name="Bath Tub" celcius={38} background="royalblue" right="25vw" />
           <Item name="Pizza" celcius={300} background="firebrick" />
           <Item name="Tea/Coffee" celcius={60} background="black" right="25vw" />
-          <Item name="Berries" time="30s" celcius={52} background="black" right="25vw" />
+          <Item name="Sterilize Berries" time="30s" celcius={52} background="black" right="25vw" />
 
           {/* Other Meats */}
           <Item name="Chicken Breast" time="1h" celcius={65} background="tan" color="black" />
@@ -261,7 +261,7 @@ const App: React.FC = () => {
         </Scope>
         <Indicator onClick={scrollToZeroCelcius}>
           {isZeroInit && (
-            <Label>{currentTemp}ºC / {toF(parseFloat(currentTemp)).toFixed(1)}ºF</Label>
+            <Label>{currentTemp}ºC / {toF((zeroScrollTop - y) / 10).toFixed(1)}ºF</Label>
           )}
         </Indicator>
       </ScopeContainer>
