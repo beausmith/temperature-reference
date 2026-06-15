@@ -23,6 +23,9 @@ vite.config.d.ts
 vitest.config.js
 vitest.config.d.ts
 
+# Claude Code — share project settings, keep personal/local ones out
+.claude/settings.local.json
+
 # misc
 .DS_Store
 *~lock~
