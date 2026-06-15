@@ -16,72 +16,45 @@ const Panel = styled.div`
   background: white;
   border-radius: 1.25rem 1.25rem 0 0;
   z-index: 11;
-  padding: 1.25rem 1rem calc(env(safe-area-inset-bottom) + 1rem);
+  padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
-`
-
-const DisplayRow = styled.div`
-  display: flex;
-  align-items: center;
   gap: 0.5rem;
-  min-height: 3.5rem;
 `
 
-const UnitToggle = styled.div`
+// Merged value + unit toggle: each segment shows the temperature in its unit
+// (active = the value being typed, inactive = the live conversion). Same look as
+// the old unit toggle, scaled up to the digit size. Full width, equal halves.
+const ValueToggle = styled.div`
   display: flex;
   background: #f0f0f0;
-  border-radius: 0.5rem;
-  padding: 2px;
-  gap: 2px;
-  flex-shrink: 0;
+  border-radius: 0.75rem;
+  padding: 4px;
+  gap: 4px;
+  max-width: 100%;
 `
 
 const ToggleOption = styled.button<{ $active: boolean }>`
   appearance: none;
   border: none;
-  border-radius: 0.375rem;
-  padding: 0.4rem 0.7rem;
-  font-size: 0.85rem;
-  font-weight: ${({ $active }) => ($active ? 600 : 400)};
-  background: ${({ $active }) => ($active ? 'white' : 'transparent')};
-  box-shadow: ${({ $active }) => ($active ? '0 1px 3px rgba(0,0,0,0.15)' : 'none')};
-  color: ${({ $active }) => ($active ? '#000' : '#666')};
-  cursor: pointer;
-`
-
-const DisplayValue = styled.div`
-  flex: 1;
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.9rem;
   font-size: 2.5rem;
   font-weight: 200;
-  text-align: right;
+  flex: 1;
+  line-height: 1;
   letter-spacing: -0.02em;
-  color: #000;
-  line-height: 1;
-`
-
-const DisplayPlaceholder = styled(DisplayValue)`
-  color: #ccc;
-`
-
-const BackspaceBtn = styled.button`
-  appearance: none;
-  border: none;
-  background: transparent;
-  font-size: 1.5rem;
-  padding: 0.25rem 0.25rem 0.25rem 0.5rem;
+  white-space: nowrap;
+  background: ${({ $active }) => ($active ? 'white' : 'transparent')};
+  box-shadow: ${({ $active }) => ($active ? '0 1px 3px rgba(0,0,0,0.15)' : 'none')};
+  color: ${({ $active }) => ($active ? '#000' : '#999')};
   cursor: pointer;
-  color: #888;
-  flex-shrink: 0;
-  line-height: 1;
 `
 
 const ErrorMsg = styled.div`
   font-size: 0.75rem;
   color: #c00;
   text-align: center;
-  min-height: 1rem;
 `
 
 const KeyGrid = styled.div`
@@ -109,11 +82,9 @@ const Key = styled.button`
   }
 `
 
-const GoButton = styled.button`
+const ActionButton = styled.button`
   appearance: none;
   border: none;
-  background: #000;
-  color: white;
   border-radius: 0.75rem;
   font-size: 1.25rem;
   font-weight: 600;
@@ -121,14 +92,40 @@ const GoButton = styled.button`
   cursor: pointer;
   line-height: 1;
   &:disabled {
-    background: #ccc;
     cursor: default;
+  }
+`
+
+const ClearButton = styled(ActionButton)`
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  background: #f0f0f0;
+  color: #000;
+  &:disabled {
+    opacity: 0.3;
+  }
+`
+
+const GoButton = styled(ActionButton)`
+  grid-column: span 2;
+  background: #000;
+  color: white;
+  &:disabled {
+    background: #ccc;
   }
 `
 
 type Unit = 'C' | 'F'
 
 const KEYS = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '±', '0', '.']
+
+const toF = (c: number) => c * (9 / 5) + 32
+const toC = (f: number) => (f - 32) * (5 / 9)
+// Round to 1 decimal, but drop a trailing .0 (whole values show no decimal)
+const fmt = (n: number) => {
+  const r = Math.round(n * 10) / 10
+  return Number.isInteger(r) ? String(r) : r.toFixed(1)
+}
 
 interface Props {
   onClose: () => void
@@ -147,14 +144,18 @@ const TempKeypad: React.FC<Props> = ({ onClose, onSubmit }) => {
   const numVal = parseFloat(digits)
   const hasValue = digits !== '' && digits !== '-'
   const celsiusVal =
-    hasValue && !isNaN(numVal)
-      ? unit === 'F'
-        ? (numVal - 32) * (5 / 9)
-        : numVal
-      : null
+    hasValue && !isNaN(numVal) ? (unit === 'F' ? toC(numVal) : numVal) : null
   const isOutOfRange =
     celsiusVal !== null && (celsiusVal < -40 || celsiusVal > 300)
   const canSubmit = hasValue && celsiusVal !== null && !isOutOfRange
+
+  // Value shown in a given segment: the raw input for the active unit, the live
+  // conversion for the other, and a dash for both when there's no value yet.
+  const display = (segUnit: Unit) => {
+    if (!hasValue || isNaN(numVal)) return segUnit === unit && hasValue ? digits : '—'
+    if (segUnit === unit) return digits
+    return fmt(segUnit === 'F' ? toF(numVal) : toC(numVal))
+  }
 
   const handleKey = (key: string) => {
     if (key === '±') {
@@ -175,18 +176,12 @@ const TempKeypad: React.FC<Props> = ({ onClose, onSubmit }) => {
     setDigits(d => d + key)
   }
 
-  const handleBackspace = () => setDigits(d => d.slice(0, -1))
+  const handleClear = () => setDigits('')
 
   const handleUnitToggle = (newUnit: Unit) => {
     if (newUnit === unit) return
     window.localStorage.setItem(lastUnitKey, newUnit)
-    if (hasValue && !isNaN(numVal)) {
-      const converted =
-        newUnit === 'F'
-          ? Math.round((numVal * (9 / 5) + 32) * 10) / 10
-          : Math.round(((numVal - 32) * (5 / 9)) * 10) / 10
-      setDigits(String(converted))
-    }
+    setDigits('') // start fresh in the newly selected unit
     setUnit(newUnit)
   }
 
@@ -196,44 +191,30 @@ const TempKeypad: React.FC<Props> = ({ onClose, onSubmit }) => {
     onClose()
   }
 
+  const renderSegment = (segUnit: Unit) => (
+    <ToggleOption
+      type="button"
+      data-testid={`toggle-${segUnit}`}
+      $active={unit === segUnit}
+      onClick={() => handleUnitToggle(segUnit)}
+    >
+      <span data-testid={`value-${segUnit}`}>{display(segUnit)}</span>°{segUnit}
+    </ToggleOption>
+  )
+
   return (
     <>
       <Backdrop onClick={onClose} />
       <Panel>
-        <DisplayRow>
-          <UnitToggle>
-            <ToggleOption
-              type="button"
-              $active={unit === 'C'}
-              onClick={() => handleUnitToggle('C')}
-            >
-              °C
-            </ToggleOption>
-            <ToggleOption
-              type="button"
-              $active={unit === 'F'}
-              onClick={() => handleUnitToggle('F')}
-            >
-              °F
-            </ToggleOption>
-          </UnitToggle>
-          {digits ? (
-            <DisplayValue data-testid="keypad-display">{digits}</DisplayValue>
-          ) : (
-            <DisplayPlaceholder data-testid="keypad-display">—</DisplayPlaceholder>
-          )}
-          <BackspaceBtn
-            type="button"
-            onClick={handleBackspace}
-            aria-label="backspace"
-            disabled={digits === ''}
-          >
-            ⌫
-          </BackspaceBtn>
-        </DisplayRow>
-        <ErrorMsg>
-          {isOutOfRange && 'Supported range −40 to 300°C (−40 to 572°F)'}
-        </ErrorMsg>
+        <ValueToggle>
+          {renderSegment('C')}
+          {renderSegment('F')}
+        </ValueToggle>
+        {isOutOfRange && (
+          <ErrorMsg>
+            Supported range -40 to 300°C (-40 to 572°F)
+          </ErrorMsg>
+        )}
         <KeyGrid>
           {KEYS.map(key => (
             <Key
@@ -252,15 +233,23 @@ const TempKeypad: React.FC<Props> = ({ onClose, onSubmit }) => {
               {key}
             </Key>
           ))}
+          <ClearButton
+            type="button"
+            onClick={handleClear}
+            disabled={digits === ''}
+            aria-label="Clear"
+          >
+            Clear
+          </ClearButton>
+          <GoButton
+            type="button"
+            onClick={handleSubmit}
+            disabled={!canSubmit}
+            aria-label="Go to temperature"
+          >
+            Go
+          </GoButton>
         </KeyGrid>
-        <GoButton
-          type="button"
-          onClick={handleSubmit}
-          disabled={!canSubmit}
-          aria-label="Go to temperature"
-        >
-          Go
-        </GoButton>
       </Panel>
     </>
   )
