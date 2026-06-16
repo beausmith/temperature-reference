@@ -202,7 +202,8 @@ const TempKeypad: React.FC<Props> = ({ onClose, onSubmit }) => {
   const handleUnitToggle = (newUnit: Unit) => {
     if (newUnit === unit) return
     window.localStorage.setItem(lastUnitKey, newUnit)
-    setDigits('') // start fresh in the newly selected unit
+    // Keep the typed digits; they now represent the newly selected unit, and
+    // the other unit's value is recalculated from them.
     setUnit(newUnit)
   }
 

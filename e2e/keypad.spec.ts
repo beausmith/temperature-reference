@@ -77,17 +77,15 @@ test('typing shows the live conversion (whole values drop the decimal)', async (
   await expect(page.getByTestId('value-F')).toHaveText('212.9')
 })
 
-test('changing unit clears the value to the empty state', async ({ page }) => {
+test('changing unit keeps the typed value and reinterprets it as the new unit', async ({ page }) => {
   await page.goto('/')
   await openKeypad(page)
-  await typeTemp(page, '100')
+  await typeTemp(page, '56')
+  await expect(page.getByTestId('value-C')).toHaveText('56')
+  await expect(page.getByTestId('value-F')).toHaveText('132.8') // 56°C → 132.8°F
   await page.getByTestId('toggle-F').click()
-  await expect(page.getByTestId('value-C')).toHaveText('—')
-  await expect(page.getByTestId('value-F')).toHaveText('—')
-  // typing now goes into the newly selected °F
-  await typeTemp(page, '50')
-  await expect(page.getByTestId('value-F')).toHaveText('50')
-  await expect(page.getByTestId('value-C')).toHaveText('10') // 50°F = 10°C
+  await expect(page.getByTestId('value-F')).toHaveText('56') // raw value kept, now °F
+  await expect(page.getByTestId('value-C')).toHaveText('13.3') // recalculated: 56°F = 13.3°C
 })
 
 test('does not scroll the ruler while the keypad is open', async ({ page }) => {
