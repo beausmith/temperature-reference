@@ -90,6 +90,16 @@ test('changing unit clears the value to the empty state', async ({ page }) => {
   await expect(page.getByTestId('value-C')).toHaveText('10') // 50°F = 10°C
 })
 
+test('does not scroll the ruler while the keypad is open', async ({ page }) => {
+  await page.goto('/')
+  await page.waitForFunction(() => window.scrollY === 3025) // let the initial restore settle
+  await openKeypad(page)
+  const before = await page.evaluate(() => window.scrollY)
+  await page.mouse.wheel(0, 600)
+  await page.waitForTimeout(150)
+  expect(await page.evaluate(() => window.scrollY)).toBe(before)
+})
+
 test('out-of-range value disables submit and shows error', async ({ page }) => {
   await page.goto('/')
   await openKeypad(page)
@@ -114,6 +124,7 @@ test('selected unit is remembered the next time the keypad opens', async ({ page
   await openKeypad(page)
   await page.getByTestId('toggle-F').click()
   await page.mouse.click(10, 10) // dismiss without submitting
+  await expect(page.getByRole('button', { name: 'Go to temperature' })).not.toBeVisible() // wait for close animation
   await openKeypad(page)
   // The °F toggle should already be active
   await typeTemp(page, '32')

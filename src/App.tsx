@@ -8,7 +8,7 @@ import Button from './components/Button'
 import Navigation from './components/Navigation'
 import StatusBar from './components/StatusBar'
 import TempKeypad from './components/TempKeypad'
-import Version from './components/Version'
+import InfoScreen from './components/InfoScreen'
 
 smoothscroll.polyfill()
 
@@ -190,6 +190,7 @@ const App: React.FC = () => {
   const safeAreaInsetTop = useSafeAreaInsetTop()
   const [isZeroInit, setIsZeroInit] = useState(false)
   const [isKeypadOpen, setIsKeypadOpen] = useState(false)
+  const [isInfoOpen, setIsInfoOpen] = useState(false)
   if (!!y && !isZeroInit) setIsZeroInit(true)
   const zeroScrollTop = (celciusMax / scale) * rowHeight - (0 / scale * rowHeight) + rowHeight / 2 - safeAreaInsetTop / 2
   const currentTemp = ((zeroScrollTop - y) / 10).toFixed(1)
@@ -220,6 +221,20 @@ const App: React.FC = () => {
       document.title = `Celsius - ${import.meta.env.VITE_BRANCH}`
     }
   }, [])
+  useEffect(() => {
+    // Lock the ruler from scrolling while a modal is open. overflow:hidden
+    // blocks user scroll but still allows programmatic scroll (e.g. the
+    // keypad's jump-to-temperature on submit).
+    if (!isKeypadOpen && !isInfoOpen) return
+    const { documentElement: html, body } = document
+    const prev = { html: html.style.overflow, body: body.style.overflow }
+    html.style.overflow = 'hidden'
+    body.style.overflow = 'hidden'
+    return () => {
+      html.style.overflow = prev.html
+      body.style.overflow = prev.body
+    }
+  }, [isKeypadOpen, isInfoOpen])
   return (
     <AppContainer>
       <GlobalStyle />
@@ -284,7 +299,7 @@ const App: React.FC = () => {
       <Navigation>
         <Button $fullWidth onClick={scrollToZeroCelcius}>0ºC</Button>
         <Button $fullWidth onClick={() => setIsKeypadOpen(true)}>Go</Button>
-        <Version />
+        <Button $fullWidth onClick={() => setIsInfoOpen(true)}>Info</Button>
       </Navigation>
       {isKeypadOpen && (
         <TempKeypad
@@ -292,6 +307,7 @@ const App: React.FC = () => {
           onSubmit={scrollToCelsius}
         />
       )}
+      {isInfoOpen && <InfoScreen onClose={() => setIsInfoOpen(false)} />}
       <StatusBar />
     </AppContainer>
   );

@@ -26,6 +26,11 @@ test('renders 0°C navigation button', () => {
   expect(button).toBeInTheDocument();
 });
 
+test('renders the Info navigation button', () => {
+  render(<App />);
+  expect(screen.getByRole('button', { name: 'Info' })).toBeInTheDocument();
+});
+
 test('renders a row for every 5ºC from -40 to 300 with fahrenheit conversions', () => {
   render(<App />);
   expect(screen.getAllByText(/ºF$/)).toHaveLength((300 - -40) / 5 + 1);

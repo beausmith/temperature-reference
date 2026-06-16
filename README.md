@@ -6,9 +6,9 @@ I built this app to have a reference when cooking and traveling… and then foun
 - ✅ Re-opening app restores temperature / scroll position.
 - ✅ "Go" button opens a numeric keypad to jump to any temperature (°C or °F); selected unit is remembered.
 - ✅ Playwright (browser) tests — real scrolling, the smooth-scroll 0ºC button, and scroll restore across reloads are covered in `e2e/`. Remaining idea: run them against iOS Safari/WebKit to exercise real safe-area insets.
+- ✅ "Info" button opens a full-screen panel (slides up/down) with platform-aware install instructions and the app version / commit ref. Remaining idea: add filter buttons to control what the ruler shows.
 
 ## Future Feature Ideas
-
 - **More reference items**
     — Several cooking temps are already commented out in App.tsx (medium/well-done steak, roasts).
     - Candy-making stages (soft ball, hard crack), bread baking, and common baking temps (325°F/375°F/425°F) would round out the cooking section well.

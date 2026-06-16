@@ -1,14 +1,33 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 
-const Backdrop = styled.div`
+// Match InfoScreen's open/close feel: backdrop fades, panel slides from the bottom.
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`
+const fadeOut = keyframes`
+  from { opacity: 1; }
+  to { opacity: 0; }
+`
+const slideUp = keyframes`
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+`
+const slideDown = keyframes`
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+`
+
+const Backdrop = styled.div<{ $closing: boolean }>`
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
   z-index: 10;
+  animation: ${({ $closing }) => ($closing ? fadeOut : fadeIn)} 0.28s ease-out forwards;
 `
 
-const Panel = styled.div`
+const Panel = styled.div<{ $closing: boolean }>`
   position: fixed;
   bottom: 0;
   left: 0;
@@ -20,6 +39,7 @@ const Panel = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  animation: ${({ $closing }) => ($closing ? slideDown : slideUp)} 0.28s ease-out forwards;
 `
 
 // Merged value + unit toggle: each segment shows the temperature in its unit
@@ -140,6 +160,7 @@ const TempKeypad: React.FC<Props> = ({ onClose, onSubmit }) => {
     const stored = window.localStorage.getItem(lastUnitKey)
     return stored === 'F' ? 'F' : 'C'
   })
+  const [closing, setClosing] = useState(false)
 
   const numVal = parseFloat(digits)
   const hasValue = digits !== '' && digits !== '-'
@@ -188,7 +209,7 @@ const TempKeypad: React.FC<Props> = ({ onClose, onSubmit }) => {
   const handleSubmit = () => {
     if (!canSubmit || celsiusVal === null) return
     onSubmit(celsiusVal)
-    onClose()
+    setClosing(true)
   }
 
   const renderSegment = (segUnit: Unit) => (
@@ -204,8 +225,8 @@ const TempKeypad: React.FC<Props> = ({ onClose, onSubmit }) => {
 
   return (
     <>
-      <Backdrop onClick={onClose} />
-      <Panel>
+      <Backdrop $closing={closing} onClick={() => setClosing(true)} />
+      <Panel $closing={closing} onAnimationEnd={() => closing && onClose()}>
         <ValueToggle>
           {renderSegment('C')}
           {renderSegment('F')}
