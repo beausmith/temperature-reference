@@ -3,10 +3,10 @@
 I built this app to have a reference when cooking and traveling… and then found it to be a fun side project to tinker with.
 
 ## Features
-- ✅ Re-opening app restores temperature / scroll position.
-- ✅ "Go" button opens a numeric keypad to jump to any temperature (°C or °F); selected unit is remembered.
-- ✅ Playwright (browser) tests — real scrolling, the smooth-scroll 0ºC button, and scroll restore across reloads are covered in `e2e/`. Remaining idea: run them against iOS Safari/WebKit to exercise real safe-area insets.
-- ✅ "Info" button opens a full-screen panel (slides up/down) with platform-aware install instructions and the app version / commit ref. Remaining idea: add filter buttons to control what the ruler shows.
+- **Installable [PWA](https://www.google.com/search?q=PWA)** — Add app to your home screen. The app works offline and updates automatically when a new update is available.
+- **°C/°F ruler** — Celsius and Fahrenheit side by side. Scroll to any temperature.
+- **Reference Markers** — common cooking/everyday temps pinned on the scale (sauna, tea, egg, chicken, salmon, steak, pizza…), some with times.
+- **Go to Temp** — type a temperature and jump to it; °C/°F toggle with live conversion.
 
 ## Future Feature Ideas
 - **More reference items**
@@ -58,7 +58,7 @@ yarn test:watch    # run unit tests in watch mode
 yarn test:e2e      # run Playwright browser tests (starts the dev server itself)
 ```
 
-The Playwright tests run against your locally installed Google Chrome (`channel: 'chrome'`), so no browser download is needed.
+The Playwright tests run against your locally installed Google Chrome (`channel: 'chrome'`), so no browser download is needed. `e2e/` covers real scrolling, the 0ºC button, the keypad, the Info screen, scroll restore across reloads, and scroll-locking behind modals. Remaining idea: run them against iOS Safari/WebKit to exercise real safe-area insets.
 
 ### Production build
 
