@@ -7,6 +7,17 @@ const GlobalStyle = createGlobalStyle`
 
   html {
     font-size: 16px;
+  }
+
+  /*
+   * Disable text selection everywhere (the app has no selectable content). The
+   * -webkit- prefixes are required for iOS Safari, where the unprefixed
+   * user-select is ignored and long-press otherwise selects text / shows the
+   * callout menu.
+   */
+  * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
     user-select: none;
   }
 
